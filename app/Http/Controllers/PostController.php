@@ -61,6 +61,7 @@ class PostController extends Controller
     public function store(Request $request)
     {
         try {
+            $this->authorize('create', Post::class);
             $post = $this->postService->save($request->all());
         } catch (\Exception $exception) {
             return response()->json([
@@ -113,6 +114,7 @@ class PostController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            $this->authorize('update', $this->postService->getById($id));
             $post = $this->postService->update($request->all(), $id);
         } catch (\Exception $exception) {
             return response()->json([
@@ -133,6 +135,7 @@ class PostController extends Controller
     public function destroy($id)
     {
         try {
+            $this->authorize('delete',  $this->postService->getById($id));
             $post = $this->postService->deleteById($id);
         } catch (\Exception $exception) {
             return response()->json([
