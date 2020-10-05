@@ -32,6 +32,17 @@ class PostRepository
         return $this->post->get();
     }
 
+    public function update($data, $id)
+    {
+        $post = $this->post->find($id);
+
+        $post->title = $data['title'];
+        $post->description = $data['description'];
+        $post->update();
+
+        return $post;
+    }
+
     public function save($data)
     {
         $post = new $this->post;

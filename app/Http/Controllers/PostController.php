@@ -22,6 +22,7 @@ class PostController extends Controller
     {
         $this->postService = $postService;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -54,7 +55,7 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
@@ -94,7 +95,7 @@ class PostController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Post  $post
+     * @param \App\Models\Post $post
      * @return \Illuminate\Http\Response
      */
     public function edit(Post $post)
@@ -105,19 +106,28 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @param  $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $post = $this->postService->update($request->all(), $id);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'status' => 500,
+                'error' => $exception->getMessage(),
+            ]);
+        }
+
+        return response()->json(compact('post'), Response::HTTP_OK);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Post  $post
+     * @param \App\Models\Post $post
      * @return \Illuminate\Http\Response
      */
     public function destroy(Post $post)

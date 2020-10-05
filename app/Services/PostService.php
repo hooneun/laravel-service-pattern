@@ -5,6 +5,8 @@ namespace App\Services;
 
 
 use App\Repositories\PostRepository;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class PostService
@@ -31,6 +33,29 @@ class PostService
     public function getById($id)
     {
         return $this->postRepository->getById($id);
+    }
+
+    public function update($data, $id)
+    {
+        $validator = Validator::make($data, [
+            'title' => 'bail|min:2',
+            'description' => 'bail|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            throw new \InvalidArgumentException($validator->errors()->first());
+        }
+
+        DB::beginTransaction();
+        try {
+            $post = $this->postRepository->update($data, $id);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::info($exception->getMessage());
+        }
+        DB::commit();
+
+        return $post;
     }
 
     /**
