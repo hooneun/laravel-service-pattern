@@ -25,11 +25,20 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        //
+        try {
+            $posts = $this->postService->getAll();
+        } catch (\Exception $exception) {
+            return response()->json([
+                'status' => 500,
+                'error' => $exception->getMessage(),
+            ]);
+        }
+
+        return response()->json(compact('posts'), Response::HTTP_OK);
     }
 
     /**
@@ -65,12 +74,21 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
+     * @param  $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Post $post)
+    public function show($id)
     {
-        //
+        try {
+            $post = $this->postService->getById($id);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'status' => 500,
+                'error' => $exception->getMessage(),
+            ]);
+        }
+
+        return response()->json(compact('post'), Response::HTTP_OK);
     }
 
     /**

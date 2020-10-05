@@ -22,6 +22,16 @@ class PostRepository
         $this->post = $post;
     }
 
+    public function getById($id)
+    {
+        return $this->post->find($id);
+    }
+
+    public function getAll()
+    {
+        return $this->post->get();
+    }
+
     public function save($data)
     {
         $post = new $this->post;

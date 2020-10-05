@@ -23,6 +23,23 @@ class PostService
         $this->postRepository = $postRepository;
     }
 
+    public function getAll()
+    {
+        return $this->postRepository->getAll();
+    }
+
+    public function getById($id)
+    {
+        return $this->postRepository->getById($id);
+    }
+
+    /**
+     * Validate post data
+     * Store !
+     *
+     * @param array $data
+     * @return String
+     */
     public function save($data)
     {
         $validator = Validator::make($data, [
@@ -34,6 +51,6 @@ class PostService
             throw new \InvalidArgumentException($validator->errors()->first());
         }
 
-        return $this->postRepository->save(data);
+        return $this->postRepository->save($data);
     }
 }
