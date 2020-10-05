@@ -32,6 +32,14 @@ class PostRepository
         return $this->post->get();
     }
 
+    public function delete($id)
+    {
+        $post = $this->post->find($id);
+        $post->delete();
+
+        return $post;
+    }
+
     public function update($data, $id)
     {
         $post = $this->post->find($id);

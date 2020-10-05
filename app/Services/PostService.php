@@ -5,6 +5,7 @@ namespace App\Services;
 
 
 use App\Repositories\PostRepository;
+use http\Exception\InvalidArgumentException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -52,6 +53,22 @@ class PostService
         } catch (\Exception $exception) {
             DB::rollBack();
             Log::info($exception->getMessage());
+        }
+        DB::commit();
+
+        return $post;
+    }
+
+    public function deleteById($id)
+    {
+        DB::beginTransaction();
+        try  {
+            $post = $this->postRepository->delete($id);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::info($exception->getMessage());
+
+            throw new \InvalidArgumentException('Unable to delete post data');
         }
         DB::commit();
 
